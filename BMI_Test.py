@@ -1,18 +1,16 @@
-h = input('height(m): ')
-height = float(h)
-w = input('weight(kg): ')
-weight = float(w)
-bmi = float(weight / (height * height))
+height = float(input('height(m): '))
+weight = float(input('weight(kg): '))
+bmi = round(float(weight / (height ** 2)), 2)
 print(bmi)
 if bmi < 18.5:
-    print('过轻')
+    print('杩囪交')
 elif bmi >= 18.5 and bmi < 25:
-    print('正常')
+    print('姝ｅ父')
 elif bmi >= 25 and bmi < 28:
-    print('过重')
+    print('杩囬噸')
 elif bmi >= 28 and bmi < 32:
-    print('肥胖')
+    print('鑲ヨ儢')
 else:
-    print('严重肥胖')
+    print('涓ラ噸鑲ヨ儢')
     
 
