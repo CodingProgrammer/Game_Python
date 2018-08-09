@@ -1,80 +1,49 @@
-def parentheses(s):
-    if '+' in s:
-        a, b = map(int, s.split('+'))
-        return a + b
-    elif '-' in s:
-        a, b = map(int, s.split('-'))
-        return a - b
-    elif '*' in s:
-        a, b = map(int, s.split('*'))
-        return a * b
-    elif '/' in s:
-        a, b = map(int, s.split('/'))
-        return a / b
-
-def concise(arr):
-    length = len(arr)
-    i = 0
-    res = []
-    while i < length:
-        if arr[i].isdigit():
-            temp = ''
-            while i < length and arr[i].isdigit():
-                temp += arr[i]
-                i += 1
-            res.append(int(temp))
-        else:
-            if '-' in arr[i] and len(arr[i]) > 1:
-                res.append(-int(arr[i][1:]))
-            else:
-                res.append(arr[i])
-            i += 1
-    return res
-
 def calculate(arr):
-    # */
-    i =  0
-    temp = [] 
-    while i < len(arr):
-        if arr[i] == '*':
-            temp.append(temp.pop() * arr[i+1])
-            i += 1
-
-        elif arr[i] == '/':
-            temp.append(temp.pop() / arr[i+1])
-            i += 1
+    temp_stack = []
+    for each in arr:
+        if temp_stack and temp_stack[-1] == '*':
+            temp_stack.pop()
+            temp_stack.append(temp_stack.pop() * each)
+        elif temp_stack and temp_stack[-1] == '/':
+            temp_stack.pop()
+            temp_stack.append(temp_stack.pop() // each)
         else:
-            temp.append(arr[i])
-        i += 1
-    j = 0
-    res = 0
-    pre = 0
-    while j < len(temp):
-        if temp[j] == '+':
-            res += (pre + temp[j+1])
-            j += 1
-        
-        elif temp[j] == '-':
-            res += (pre - temp[j+1])
-            j += 1
-        else:
-            pre = temp[j]
-        j += 1
-    return res
+            temp_stack.append(each)
 
-def formulaToNum(s):
+    res = []
+    for i in range(len(temp_stack)):
+        if res and res[-1] == '+':
+            res.pop()
+            res.append(res.pop() + temp_stack[i])
+        elif res and res[-1] == '-':
+            res.pop()
+            res.append(res.pop() - temp_stack[i])
+        else:
+            res.append(temp_stack[i])
+    return sum(res)
+
+def formula(s, index):
+    i = index
     myStack = []
-    for each in s:
-        if each == ')' and '(' in myStack:
-            temp = []
-            while myStack[-1] != '(':
-                temp.append(myStack.pop())
-            myStack.pop()
-            myStack.append(str(parentheses(''.join(temp[::-1]))))
+    temp_num = 0
+    while i < len(s) and s[i] != ')':
+        if s[i] == '(':
+            retrurn_data = formula(s, i+1)
+            myStack.append(retrurn_data[0])
+            i = retrurn_data[1]
         else:
-            myStack.append(each)
-    myStack = concise(myStack)
-    return (calculate(myStack))
+            if s[i].isdigit():
+                temp_num = temp_num * 10 + int(s[i])
+            else:
+                if s[i-1].isdigit():
+                    myStack.append(temp_num)
+                    temp_num = 0
+                myStack.append(s[i])
+            i += 1
+    if s[i-1] != ')':
+        myStack.append(temp_num)
+    return (calculate(myStack), i + 1)
 
-s = '48*((70-65)-45)+8*1'
-print(formulaToNum(s))
+if __name__ != 'main':
+    s = '2*(1+(24/(2+3*(4-2))))'
+    print(formula(s, 0)[0])
