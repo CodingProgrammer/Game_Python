@@ -1,0 +1,16 @@
+dangfei = int(input("输入你的党费："))
+gongzi = 0
+
+if dangfei <= 15:
+    gongzi = dangfei / 0.005
+
+elif 30 <= dangfei <= 50:
+    gongzi = dangfei / 0.01
+
+elif 75 <= dangfei <= 150:
+    gongzi = dangfei / 0.015
+
+elif  dangfei >= 200:
+    gongzi = dangfei / 0.02
+
+print("工资：", gongzi)
